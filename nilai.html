@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Input Nilai Mahasiswa</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<a href="index.html" class="btn btn-secondary mt-3 ml-3" onclick="window.history.back()">Back</a>
+
+<div class="container mt-5">
+  <h2>Input Nilai Mahasiswa</h2>
+
+  <form id="mahasiswaForm">
+    <div class="form-group">
+      <label for="nama">Nama:</label>
+      <input type="text" class="form-control" id="namaInput">
+    </div>
+
+    <div class="form-group">
+      <label for="nim">NIM:</label>
+      <input type="text" class="form-control" id="nimInput">
+    </div>
+
+    <div class="form-group">
+      <label for="jumlahMatkul">Jumlah Matakuliah:</label>
+      <input type="number" class="form-control" id="jumlahMatkulInput">
+    </div>
+
+    <button type="button" class="btn btn-primary" onclick="inputNilai()">Input Nilai</button>
+  </form>
+
+  <div class="mt-4" id="hasil">
+    <h3>Hasil Nilai Mahasiswa:</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>Nama Matakuliah</th>
+          <th>Jumlah Kehadiran</th>
+          <th>Nilai Tugas</th>
+          <th>Nilai UTS</th>
+          <th>Nilai UAS</th>
+          <th>Grade</th>
+        </tr>
+      </thead>
+      <tbody id="nilaiMahasiswa">
+      </tbody>
+    </table>
+    <h4 id="nilaiRataRata"></h4>
+    <h4 id="grade"></h4>
+  </div>
+</div>
+
+<!-- Bootstrap JS and jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+  function inputNilai() {
+    var nama = document.getElementById('namaInput').value;
+    var nim = document.getElementById('nimInput').value;
+    var jumlahMatkul = document.getElementById('jumlahMatkulInput').value;
+
+    var nilaiTotal = 0;
+    var totalBobot = 0;
+
+    var hasilDiv = document.getElementById('nilaiMahasiswa');
+    hasilDiv.innerHTML = '';
+
+    for (var i = 1; i <= jumlahMatkul; i++) {
+      var namaMatkul = prompt(`Masukkan nama matakuliah ke-${i}:`);
+      var kehadiran = parseFloat(prompt(`Masukkan jumlah kehadiran matakuliah ke-${i}:`));
+      var nilaiTugas = parseFloat(prompt(`Masukkan nilai tugas matakuliah ke-${i}:`));
+      var nilaiUTS = parseFloat(prompt(`Masukkan nilai UTS matakuliah ke-${i}:`));
+      var nilaiUAS = parseFloat(prompt(`Masukkan nilai UAS matakuliah ke-${i}:`));
+
+      var nilaiRataRata = 0.1 * (kehadiran / 21) * 100 + 0.2 * nilaiTugas + 0.3 * nilaiUTS + 0.4 * nilaiUAS;
+
+      nilaiTotal += nilaiRataRata;
+      totalBobot += 1;
+
+      var grade = getGrade(nilaiRataRata);
+
+      hasilDiv.innerHTML += `<tr>
+                              <td>${i}</td>
+                              <td>${namaMatkul}</td>
+                              <td>${kehadiran}</td>
+                              <td>${nilaiTugas}</td>
+                              <td>${nilaiUTS}</td>
+                              <td>${nilaiUAS}</td>
+                              <td>${grade}</td>
+                            </tr>`;
+    }
+
+    var nilaiRataRataTotal = nilaiTotal / totalBobot;
+    var gradeTotal = getGrade(nilaiRataRataTotal);
+
+    document.getElementById('nilaiRataRata').innerHTML = `Nilai Rata-rata Total: ${nilaiRataRataTotal.toFixed(2)}`;
+    document.getElementById('grade').innerHTML = `Grade Nilai: ${gradeTotal}`;
+  }
+
+  function getGrade(nilaiRataRata) {
+    if (nilaiRataRata >= 85) {
+      return 'A';
+    } else if (nilaiRataRata >= 75) {
+      return 'B';
+    } else if (nilaiRataRata >= 60) {
+      return 'C';
+    } else if (nilaiRataRata >= 50) {
+      return 'D';
+    } else {
+      return 'E';
+    }
+  }
+</script>
+
+</body>
+</html>
